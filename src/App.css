@@ -1,5 +1,15 @@
-.container{
+/* use that class for vertical centering */
+.vert-container{ 
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100vh;  
+}
+.horiz-container{
+  display: flex;
+  gap: 5px;
+}
+.text-input{
+  width: 250px;
+  height: 30px;
 }
