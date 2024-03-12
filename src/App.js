@@ -8,7 +8,7 @@ function App() {
   const [text, setText] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [selectedTasks, setSelectedTasks] = useState([]);
-
+  const [isDeleteActive, setDeleteButtonState] = useState(false);
   const textChange = (text) => {
     setText(text);
   };
@@ -22,7 +22,7 @@ function App() {
     }
   };
 
-  const buttonClick = () => {
+  const addTask = () => {
     const updatedTasks = [...tasks, text];
     setTasks(updatedTasks);
     setText([]);
@@ -34,6 +34,8 @@ function App() {
     setTasks(updatedTasks);
   };
 
+  // const toggleDelete = () => {};
+
   return (
     <div className="page-container">
       <div className="list-header">Your daily tasks</div>
@@ -44,7 +46,14 @@ function App() {
           alignSelf: "stretch",
         }}
       >
-        <Button danger type="primary" icon={<DeleteOutlined />}></Button>
+        <Button
+          danger
+          style={{ background: isDeleteActive ? "green" : "red", color: "white" }}
+          type={isDeleteActive ? "link" : "primary"}
+          onClick={() => setDeleteButtonState(!isDeleteActive)}
+        >
+          {isDeleteActive ? "Done" : <DeleteOutlined />}
+        </Button>
       </div>
       <List
         style={taskList}
@@ -52,13 +61,19 @@ function App() {
         dataSource={tasks}
         renderItem={(item, index) => (
           <List.Item style={listItem}>
-            <Checkbox
-              onChange={(e) => {
-                const isChecked = e.target.checked;
-                handleSelectionChange(index, isChecked);
-              }}
-              style={{ marginRight: "1vh" }}
-            ></Checkbox>
+            {isDeleteActive ? (
+              <Button style={{ padding: 0 }} type="link">
+                ⛔
+              </Button>
+            ) : (
+              <Checkbox
+                onChange={(e) => {
+                  const isChecked = e.target.checked;
+                  handleSelectionChange(index, isChecked);
+                }}
+                style={{ marginRight: 0, width: 21, height: 32 }}
+              />
+            )}
             <Input value={item} variant="borderless" onChange={(e) => taskEdit(index, e.target.value)} />
           </List.Item>
         )}
@@ -67,7 +82,7 @@ function App() {
         {/*  INPUT and ADD Button */}
         <div className="horiz-container">
           <Input style={inputText} value={text} placeholder="Type your task" allowClear onChange={(e) => textChange(e.target.value)} />
-          <Button type="primary" disabled={text.length === 0} onClick={buttonClick}>
+          <Button type="primary" disabled={text.length === 0} onClick={addTask}>
             Add to the list
           </Button>
         </div>
