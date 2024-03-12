@@ -1,4 +1,0 @@
-type ToDo @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  description: String
-}
