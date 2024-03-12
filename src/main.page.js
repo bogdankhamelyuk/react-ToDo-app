@@ -1,4 +1,4 @@
-import "./main.page.css";
+import "./styles.css";
 import { List, Input, Button, Checkbox } from "antd";
 import { useState } from "react";
 import { removeItem, inputText, taskList, listItem } from "./Utils";
