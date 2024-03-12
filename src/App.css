@@ -1,15 +1,27 @@
-/* use that class for vertical centering */
-.vert-container{ 
+.page-container {
   display: flex;
   align-items: center;
-  justify-content: center;
-  height: 100vh;  
+  flex-direction: column;
+  margin-top: 5vh;
 }
-.horiz-container{
+.vert-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 10vh;
+  margin-top: 5vh;
+  position: relative;
+}
+.horiz-container {
   display: flex;
   gap: 5px;
+  align-items: center;
+  justify-content: center;
 }
-.text-input{
+.text-input {
   width: 250px;
   height: 30px;
+}
+.list-header {
+  font-size: x-large;
 }
