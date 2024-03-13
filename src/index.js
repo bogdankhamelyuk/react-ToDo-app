@@ -1,15 +1,25 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
-// import MainPage from "./main.page";
-// import LoginPage from "./login.page";
 import reportWebVitals from "./reportWebVitals";
+import AuthLoading from "./loading.page";
 import MainPage from "./main.page";
+import LoginPage from "./login.page";
+import RegistrationPage from "./registration.page";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
   <React.StrictMode>
-    <MainPage />
+    <Router>
+      <Routes>
+        <Route exact path="/" element={<AuthLoading />} />
+        <Route path="/main" element={<MainPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/registration" element={<RegistrationPage />} />
+        {/* Add other routes as needed */}
+      </Routes>
+    </Router>
   </React.StrictMode>
 );
 
