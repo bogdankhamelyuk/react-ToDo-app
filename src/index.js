@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 // import MainPage from "./main.page";
-import LoginPage from "./login.page";
+// import LoginPage from "./login.page";
 import reportWebVitals from "./reportWebVitals";
 import MainPage from "./main.page";
 
