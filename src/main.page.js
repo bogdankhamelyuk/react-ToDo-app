@@ -19,7 +19,7 @@ export default function MainPage() {
    */
   const handleSelectionChange = (index, checked) => {
     if (checked) {
-      setSelectedTasks([...selectedTasks, tasks[index]]);
+      setSelectedTasks([...selectedTasks, tasks[index]]); //hello
     } else {
       const updatedItems = removeItem(selectedTasks, index);
       setSelectedTasks(updatedItems);
