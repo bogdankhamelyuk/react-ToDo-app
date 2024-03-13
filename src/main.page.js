@@ -9,7 +9,7 @@ export default function MainPage() {
   const [tasks, setTasks] = useState([]);
   const [selectedTasks, setSelectedTasks] = useState([]);
   const [isDeleteActive, setDeleteButtonState] = useState(false);
-
+  //
   /**
    * Handles the change in selection state when a checkbox is checked or unchecked.
    *
