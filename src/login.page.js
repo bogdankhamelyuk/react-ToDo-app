@@ -17,7 +17,7 @@ export default function LoginPage() {
         console.log(error);
       });
   };
-  const checkPassword = (text) => {}; // 2Do for registration
+  // const checkPassword = (text) => {}; // 2Do for registration
   return (
     <div className="page-container">
       {/* header */}
@@ -34,12 +34,12 @@ export default function LoginPage() {
             <Checkbox>Remember me</Checkbox>
           </Form.Item>
 
-          <a
+          {/* <a
             className="login-form-forgot"
             // href=""
           >
             Forgot password
-          </a>
+          </a> */}
         </Form.Item>
 
         <Form.Item>
