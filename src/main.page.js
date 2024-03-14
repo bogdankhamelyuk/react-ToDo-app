@@ -1,7 +1,7 @@
 import "./styles.css";
 import { List, Input, Button, Checkbox } from "antd";
 import { useState } from "react";
-import { removeItem, inputText, taskList, listItem } from "./Utils";
+import { removeItem, inputText, listItem, addButton } from "./Utils";
 import { DeleteOutlined } from "@ant-design/icons";
 //hello
 export default function MainPage() {
@@ -49,14 +49,15 @@ export default function MainPage() {
   return (
     <div className="page-container">
       {/* header */}
-      <div className="list-header">Your daily tasks</div>
+
       <div
         className="horiz-container"
         style={{
-          justifyContent: "flex-end",
           alignSelf: "stretch",
+          gap: "1vh",
         }}
       >
+        <div className="list-header">Your daily tasks</div>
         {/* delete button */}
         <Button disabled={tasks.length === 0} danger onClick={() => setDeleteButtonState(!isDeleteActive)}>
           {isDeleteActive ? "Done" : <DeleteOutlined />}
@@ -65,7 +66,7 @@ export default function MainPage() {
 
       {/* List with the items from `tasks` */}
       <List
-        style={taskList}
+        className="task-list"
         bordered
         dataSource={tasks}
         renderItem={(item, index) => (
@@ -96,14 +97,8 @@ export default function MainPage() {
 
       <div className="horiz-container">
         {/*  INPUT and ADD Button */}
-        <Input
-          style={inputText}
-          value={text}
-          placeholder="Type your task"
-          allowClear
-          onChange={(e) => setText(e.target.value)}
-        />
-        <Button type="primary" disabled={text.length === 0} onClick={addTask}>
+        <Input style={inputText} value={text} placeholder="Type your task" allowClear onChange={(e) => setText(e.target.value)} />
+        <Button type="primary" disabled={text.length === 0} onClick={addTask} style={addButton}>
           Add to the list
         </Button>
       </div>

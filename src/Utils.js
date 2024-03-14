@@ -8,20 +8,25 @@
 export const removeItem = (toBeChangedArr, index) => {
   return toBeChangedArr.slice(0, index).concat(toBeChangedArr.slice(index + 1));
 };
-
 export const inputText = {
   width: "30vh",
 };
-export const taskList = {
-  maxHeight: "55vh",
-  minHeight: "55vh",
-  overflowY: "auto",
-  border: "none",
-  width: "50vh",
-  marginTop: "1vh",
+
+export const addButton = {
+  // maxWidth: "14vh"; */
+  /* overflow: auto; */
+  display: "flex",
+  /* white-space: nowrap; */
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  /* padding: 10px 20px; */
+  justifyContent: "space-between",
+  alignItems: "baseline",
+  paddingLeft: "10px",
 };
 
 export const listItem = {
   display: "flex",
   justifyContent: "flex-start",
+  flexWrap: "nowrap",
 };
