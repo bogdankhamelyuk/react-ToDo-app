@@ -21,11 +21,12 @@ export default function UserCheck() {
         // ...
       } else {
         console.log("user isnt registered yet: ", user);
+        navigate("/login");
       }
     });
   }, [navigate]);
   return (
-    <div className="page-container" style={{ marginTop: "50%" }}>
+    <div className="page-container">
       <Spin
         indicator={
           <LoadingOutlined

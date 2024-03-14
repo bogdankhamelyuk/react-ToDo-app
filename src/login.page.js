@@ -85,7 +85,7 @@ export default function LoginPage() {
     );
   } else {
     return (
-      <div className="page-container" style={{ marginTop: "50%" }}>
+      <div className="page-container">
         <Spin
           indicator={
             <LoadingOutlined
