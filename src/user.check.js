@@ -2,9 +2,7 @@ import "./styles.css";
 import { auth } from "./firebase.config";
 import { onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
-import { LoadingOutlined } from "@ant-design/icons";
-import { Spin } from "antd";
-
+import Spinner from "./spinner.comp";
 import { useNavigate } from "react-router-dom";
 
 export default function UserCheck() {
@@ -25,18 +23,5 @@ export default function UserCheck() {
       }
     });
   }, [navigate]);
-  return (
-    <div className="page-container">
-      <Spin
-        indicator={
-          <LoadingOutlined
-            style={{
-              fontSize: 80,
-            }}
-            spin
-          />
-        }
-      />
-    </div>
-  );
+  return <Spinner />;
 }

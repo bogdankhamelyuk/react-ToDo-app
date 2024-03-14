@@ -3,8 +3,16 @@ import { List, Input, Button, Checkbox } from "antd";
 import { useState } from "react";
 import { removeItem, inputText, listItem, addButton } from "./Utils";
 import { DeleteOutlined } from "@ant-design/icons";
+import { auth } from "./firebase.config";
+import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import Spinner from "./spinner.comp";
+import WrongPage from "./wrong.page";
+
 //hello
 export default function MainPage() {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [text, setText] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [selectedTasks, setSelectedTasks] = useState([]);
@@ -46,62 +54,92 @@ export default function MainPage() {
     setTasks(updatedTasks);
   };
 
-  return (
-    <div className="page-container">
-      {/* header */}
+  const handleSignOut = () => {
+    setIsLoading(true);
+    signOut(auth)
+      .then(() => {
+        console.log("Sign-out successful");
+        navigate("/login");
+      })
+      .catch((error) => {
+        // An error happened.
+        window.alert(error);
+        setIsLoading(false);
+      });
+  };
+  if (auth.currentUser) {
+    if (!isLoading) {
+      return (
+        <div className="page-container">
+          {/* header */}
+          <div
+            className="horiz-container"
+            style={{
+              alignSelf: "stretch",
+              gap: "1vh",
+            }}
+          >
+            <div className="list-header">Your daily tasks</div>
+            {/* delete button */}
+            <Button disabled={tasks.length === 0} danger onClick={() => setDeleteButtonState(!isDeleteActive)}>
+              {isDeleteActive ? "Done" : <DeleteOutlined />}
+            </Button>
+          </div>
 
-      <div
-        className="horiz-container"
-        style={{
-          alignSelf: "stretch",
-          gap: "1vh",
-        }}
-      >
-        <div className="list-header">Your daily tasks</div>
-        {/* delete button */}
-        <Button disabled={tasks.length === 0} danger onClick={() => setDeleteButtonState(!isDeleteActive)}>
-          {isDeleteActive ? "Done" : <DeleteOutlined />}
-        </Button>
-      </div>
+          {/* List with the items from `tasks` */}
+          <List
+            className="task-list"
+            bordered
+            dataSource={tasks}
+            renderItem={(item, index) => (
+              <List.Item style={listItem}>
+                {/* if there's no active delete display checkbox */}
+                {isDeleteActive ? null : (
+                  <Checkbox
+                    onChange={(e) => {
+                      const isChecked = e.target.checked;
+                      handleSelectionChange(index, isChecked);
+                    }}
+                    style={{ marginRight: 0, width: 21, height: 32 }}
+                  />
+                )}
 
-      {/* List with the items from `tasks` */}
-      <List
-        className="task-list"
-        bordered
-        dataSource={tasks}
-        renderItem={(item, index) => (
-          <List.Item style={listItem}>
-            {/* if there's no active delete display checkbox */}
-            {isDeleteActive ? null : (
-              <Checkbox
-                onChange={(e) => {
-                  const isChecked = e.target.checked;
-                  handleSelectionChange(index, isChecked);
-                }}
-                style={{ marginRight: 0, width: 21, height: 32 }}
-              />
+                {/* leave input in the middle  */}
+                <Input value={item} variant="borderless" onChange={(e) => taskEdit(index, e.target.value)} />
+
+                {/* if theres active delete then display delete icon */}
+                {isDeleteActive ? (
+                  <Button style={{ padding: 0 }} type="link" onClick={() => deleteTask(index)}>
+                    ⛔
+                  </Button>
+                ) : null}
+              </List.Item>
             )}
-
-            {/* leave input in the middle  */}
-            <Input value={item} variant="borderless" onChange={(e) => taskEdit(index, e.target.value)} />
-
-            {/* if theres active delete then display delete icon */}
-            {isDeleteActive ? (
-              <Button style={{ padding: 0 }} type="link" onClick={() => deleteTask(index)}>
-                ⛔
+          />
+          <div className="vert-container">
+            <div className="horiz-container">
+              {/*  INPUT and ADD Button */}
+              <Input
+                style={inputText}
+                value={text}
+                placeholder="Type your task"
+                allowClear
+                onChange={(e) => setText(e.target.value)}
+              />
+              <Button type="primary" disabled={text.length === 0} onClick={addTask} style={addButton}>
+                Add
               </Button>
-            ) : null}
-          </List.Item>
-        )}
-      />
-
-      <div className="horiz-container">
-        {/*  INPUT and ADD Button */}
-        <Input style={inputText} value={text} placeholder="Type your task" allowClear onChange={(e) => setText(e.target.value)} />
-        <Button type="primary" disabled={text.length === 0} onClick={addTask} style={addButton}>
-          Add to the list
-        </Button>
-      </div>
-    </div>
-  );
+            </div>
+            <Button danger onClick={() => handleSignOut()}>
+              Sign Out
+            </Button>
+          </div>
+        </div>
+      );
+    } else {
+      return <Spinner />;
+    }
+  } else {
+    return <WrongPage />;
+  }
 }
