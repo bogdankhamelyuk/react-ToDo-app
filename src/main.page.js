@@ -12,9 +12,7 @@ import { useNavigate } from "react-router-dom";
 //hello
 export default function MainPage() {
   const navigate = useNavigate();
-
   const { state } = useLocation();
-  const currentUser = state.currentUser;
   const isLoading = false;
   const [text, setText] = useState([]);
   const [tasks, setTasks] = useState([]);
@@ -62,7 +60,7 @@ export default function MainPage() {
     SignOut();
     navigate("/login");
   };
-  if (currentUser) {
+  if (state && state.currentUser) {
     if (!isLoading) {
       return (
         <div className="page-container">
