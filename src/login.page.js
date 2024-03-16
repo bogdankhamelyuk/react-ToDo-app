@@ -19,7 +19,6 @@ export default function LoginPage() {
     getFirebaseConfig().then((response) => {
       const app = initializeApp(response);
       const auth = getAuth(app);
-      console.log("auth: ", auth);
       if (loginView) {
         signInWithEmailAndPassword(auth, values.username, values.password)
           .then((userCredential) => {
