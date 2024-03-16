@@ -3,21 +3,24 @@ import { List, Input, Button, Checkbox } from "antd";
 import { useState } from "react";
 import { removeItem, inputText, listItem, addButton } from "./Utils";
 import { DeleteOutlined } from "@ant-design/icons";
-import { auth } from "./firebase.config";
-import { signOut } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { SignOut } from "./user.check";
 import Spinner from "./spinner.comp";
 import WrongPage from "./wrong.page";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 //hello
 export default function MainPage() {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+
+  const { state } = useLocation();
+  const currentUser = state.currentUser;
+  const isLoading = false;
   const [text, setText] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [selectedTasks, setSelectedTasks] = useState([]);
   const [isDeleteActive, setDeleteButtonState] = useState(false);
-  //
+
   /**
    * Handles the change in selection state when a checkbox is checked or unchecked.
    *
@@ -54,20 +57,12 @@ export default function MainPage() {
     setTasks(updatedTasks);
   };
 
-  const handleSignOut = () => {
-    setIsLoading(true);
-    signOut(auth)
-      .then(() => {
-        console.log("Sign-out successful");
-        navigate("/login");
-      })
-      .catch((error) => {
-        // An error happened.
-        window.alert(error);
-        setIsLoading(false);
-      });
+  const handleSignOut = async () => {
+    // setIsLoading(true);
+    SignOut();
+    navigate("/login");
   };
-  if (auth.currentUser) {
+  if (currentUser) {
     if (!isLoading) {
       return (
         <div className="page-container">

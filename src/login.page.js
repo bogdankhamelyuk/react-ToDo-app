@@ -1,50 +1,60 @@
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input } from "antd";
 import "./styles.css";
-import { auth } from "./firebase.config";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
+import Spinner from "./spinner.comp";
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { LoadingOutlined } from "@ant-design/icons";
-import { Spin } from "antd";
+import { getFirebaseConfig } from "./Utils";
 
 export default function LoginPage() {
   const [loginView, setLoginView] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
   const onFinish = (values) => {
     setIsLoading(true);
-    if (loginView) {
-      signInWithEmailAndPassword(auth, values.username, values.password)
-        .then((userCredential) => {
-          // Signed in
-          console.log("Login success");
-          navigate("/main");
-          // ...
-        })
-        .catch((error) => {
-          setIsLoading(false);
-          window.alert(error); // Display an alert message
-        });
-    } else {
-      createUserWithEmailAndPassword(auth, values.username, values.password)
-        .then((userCredential) => {
-          // Signed up
-          // const user = userCredential.user;
-          console.log("registration completed!");
-        })
-        .catch((error) => {
-          setIsLoading(false);
-          window.alert(error); // Display an alert message
-          // ..
-        });
-    }
+    getFirebaseConfig().then((response) => {
+      const app = initializeApp(response);
+      const auth = getAuth(app);
+      console.log("auth: ", auth);
+      if (loginView) {
+        signInWithEmailAndPassword(auth, values.username, values.password)
+          .then((userCredential) => {
+            // Signed in
+            console.log("Login success");
+            navigate("/main", { state: { currentUser: true } });
+            // ...
+          })
+          .catch((error) => {
+            setIsLoading(false);
+            window.alert(error); // Display an alert message
+          });
+      } else {
+        console.log("i am here");
+        createUserWithEmailAndPassword(auth, values.username, values.password)
+          .then((userCredential) => {
+            // Signed up
+            // const user = userCredential.user;
+            console.log("registration completed!");
+          })
+          .catch((error) => {
+            setIsLoading(false);
+            window.alert(error); // Display an alert message
+          });
+      }
+    });
   };
-  // const checkPassword = (text) => {}; // 2Do for registration
   if (!isLoading) {
     return (
       <div className="page-container">
-        {loginView ? <div className="list-header">Please Login to Continue</div> : <div className="list-header">Please Register to Continue</div>}{" "}
+        {loginView ? (
+          <div className="list-header">Please Login to Continue</div>
+        ) : (
+          <div className="list-header">Please Register to Continue</div>
+        )}{" "}
         <Form name="normal_login" className="login-form" initialValues={{ remember: true }} onFinish={onFinish}>
           <Form.Item name="username" rules={[{ required: true, message: "Please input your Email!" }]}>
             <Input prefix={<MailOutlined />} placeholder="Email" />
@@ -77,26 +87,17 @@ export default function LoginPage() {
                 </Button>
               )}
               Or
-              {loginView ? <Button onClick={() => setLoginView(!loginView)}>Register Now</Button> : <Button onClick={() => setLoginView(!loginView)}>Login Now</Button>}
+              {loginView ? (
+                <Button onClick={() => setLoginView(!loginView)}>Register Now</Button>
+              ) : (
+                <Button onClick={() => setLoginView(!loginView)}>Login Now</Button>
+              )}
             </div>
           </Form.Item>
         </Form>
       </div>
     );
   } else {
-    return (
-      <div className="page-container">
-        <Spin
-          indicator={
-            <LoadingOutlined
-              style={{
-                fontSize: 80,
-              }}
-              spin
-            />
-          }
-        />
-      </div>
-    );
+    return <Spinner />;
   }
 }

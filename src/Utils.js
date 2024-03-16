@@ -30,3 +30,11 @@ export const listItem = {
   justifyContent: "flex-start",
   flexWrap: "nowrap",
 };
+
+export const getFirebaseConfig = async () => {
+  return new Promise(async (resolve, reject) => {
+    const resp = await fetch("https://pwyj743grf.execute-api.us-east-1.amazonaws.com/dev/api/firebase-config");
+    const config = await resp.json();
+    resolve(config);
+  });
+};

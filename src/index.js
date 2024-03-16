@@ -9,16 +9,13 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-  <React.StrictMode>
-    <Router>
-      <Routes>
-        <Route exact path="/" element={<UserCheck />} />
-        <Route path="/main" element={<MainPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        {/* Add other routes as needed */}
-      </Routes>
-    </Router>
-  </React.StrictMode>
+  <Router>
+    <Routes>
+      <Route exact path="/" element={<UserCheck />} />
+      <Route path="/main" element={<MainPage />} />
+      <Route path="/login" element={<LoginPage />} />
+    </Routes>
+  </Router>
 );
 
 // If you want to start measuring performance in your app, pass a function
