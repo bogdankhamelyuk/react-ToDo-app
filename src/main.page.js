@@ -1,6 +1,6 @@
 import "./styles.css";
 import { List, Input, Button, Checkbox } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { removeItem, inputText, listItem, addButton } from "./Utils";
 import { SignOut } from "./user.check";
 import Spinner from "./spinner.comp";
