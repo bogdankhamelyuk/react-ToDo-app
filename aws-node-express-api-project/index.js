@@ -16,29 +16,20 @@ app.get("/", (req, res, next) => {
   });
 });
 
-const uri = `mongodb+srv://bogdankhamelyuk:${process.env.MONGO_PWD}@serverlessinstance0.mljmsy6.mongodb.net/?retryWrites=true&w=majority&appName=ServerlessInstance0`;
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
+const uri = `mongodb+srv://bodya01990:jHqaxB2VGi9rSXuL@serverlessinstance0.rd5xfm9.mongodb.net/?retryWrites=true&w=majority&appName=ServerlessInstance0`;
+// mongodb+srv://bodya01990:jHqaxB2VGi9rSXuL@serverlessinstance0.rd5xfm9.mongodb.net/?retryWrites=true&w=majority&appName=ServerlessInstance0
 
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
-}
-run().catch(console.dir);
+mongoose
+  .connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.error("Error connecting to MongoDB", err);
+  });
 
 // Define schema
 const taskSchema = new mongoose.Schema({
@@ -46,8 +37,14 @@ const taskSchema = new mongoose.Schema({
   tasks: [String],
   selectedTasks: [String],
 });
+
+// Create model
 const Task = mongoose.model("Task", taskSchema);
 
+// Middleware to parse JSON bodies
+app.use(bodyParser.json());
+
+// Route to handle POST requests
 app.post("/api/tasks", async (req, res) => {
   const { uid, tasks, selectedTasks } = req.body;
   try {
@@ -57,7 +54,7 @@ app.post("/api/tasks", async (req, res) => {
       existingUser.tasks = tasks;
       existingUser.selectedTasks = selectedTasks;
       await existingUser.save();
-      res.status(200).json({ message: "User data updated successfully" });
+      res.status(200).json({ message: { uid, tasks, selectedTasks } });
     } else {
       // If the user doesn't exist, create a new user document
       const newUser = new Task({ uid, tasks, selectedTasks });

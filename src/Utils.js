@@ -42,7 +42,7 @@ export const getFirebaseConfig = async () => {
 
 export const updateUserData = async (uid, selectedTasks, allTasks) => {
   try {
-    const url = "https://pwyj743grf.execute-api.us-east-1.amazonaws.com/dev/post/api/task"; // Replace with your actual AWS Lambda URL
+    const url = "https://pwyj743grf.execute-api.us-east-1.amazonaws.com/dev/api/task"; // Replace with your actual AWS Lambda URL
     const requestBody = {
       uid: uid,
       selectedTasks: selectedTasks,
