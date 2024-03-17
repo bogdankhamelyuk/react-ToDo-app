@@ -23,8 +23,10 @@ export default function LoginPage() {
         signInWithEmailAndPassword(auth, values.username, values.password)
           .then((userCredential) => {
             // Signed in
+            const user = userCredential.user;
+            const uid = user.uid;
             console.log("Login success");
-            navigate("/main", { state: { currentUser: true } });
+            navigate("/main", { state: { currentUser: uid } });
             // ...
           })
           .catch((error) => {
@@ -37,7 +39,10 @@ export default function LoginPage() {
           .then((userCredential) => {
             // Signed up
             // const user = userCredential.user;
+            const user = userCredential.user;
+            const uid = user.uid; // Get the UID of the newly created user
             console.log("registration completed!");
+            navigate("/main", { state: { currentUser: uid } });
           })
           .catch((error) => {
             setIsLoading(false);

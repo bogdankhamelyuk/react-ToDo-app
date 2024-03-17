@@ -39,3 +39,30 @@ export const getFirebaseConfig = async () => {
     resolve(config);
   });
 };
+
+export const updateUserData = async (uid, selectedTasks, allTasks) => {
+  try {
+    const url = "https://pwyj743grf.execute-api.us-east-1.amazonaws.com/dev/post/api/task"; // Replace with your actual AWS Lambda URL
+    const requestBody = {
+      uid: uid,
+      selectedTasks: selectedTasks,
+      allTasks: allTasks,
+    };
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const responseData = await response.json();
+    console.log("Response:", responseData);
+    return responseData; // If Lambda returns any response
+  } catch (error) {
+    console.error("Error:", error);
+    throw new Error("Failed to update user data");
+  }
+};

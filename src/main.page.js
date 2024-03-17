@@ -1,7 +1,7 @@
 import "./styles.css";
 import { List, Input, Button, Checkbox } from "antd";
-import { useState } from "react";
-import { removeItem, inputText, listItem, addButton } from "./Utils";
+import { useEffect, useState } from "react";
+import { removeItem, inputText, listItem, addButton, updateUserData } from "./Utils";
 import { SignOut } from "./user.check";
 import Spinner from "./spinner.comp";
 import WrongPage from "./wrong.page";
@@ -18,7 +18,6 @@ export default function MainPage() {
   const [isSelectActive, setIsSelectActive] = useState(false);
   /**
    * Handles the change in selection state when a checkbox is checked or unchecked.
-   *
    * @param {number} index - The index of the task in the allTasks array.
    * @param {boolean} checked - The new state of the checkbox (`true` if checked, `false` if unchecked).
    * @returns {void}
@@ -64,7 +63,12 @@ export default function MainPage() {
     navigate("/login");
   };
 
-  if (state && state.currentUser) {
+  useEffect(() => {
+    // if (state) updateUserData(state.currentUser, doneTasks, allTasks);
+  });
+
+  if (state) {
+    // ask for state as well, otherwise: TypeError: Cannot read properties of null (reading 'currentUser')
     if (!isLoading) {
       return (
         <div className="page-container">

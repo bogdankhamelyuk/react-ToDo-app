@@ -18,7 +18,7 @@ export default function UserCheck() {
       onAuthStateChanged(auth, (user) => {
         if (user) {
           console.log("navigation to main");
-          navigate("/main", { state: { currentUser: true } });
+          navigate("/main", { state: { currentUser: user.uid } });
           // ...
         } else {
           console.log("user isnt registered yet: ", user);
