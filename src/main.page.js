@@ -1,58 +1,61 @@
 import "./styles.css";
 import { List, Input, Button, Checkbox } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { removeItem, inputText, listItem, addButton } from "./Utils";
-import { DeleteOutlined } from "@ant-design/icons";
 import { SignOut } from "./user.check";
 import Spinner from "./spinner.comp";
 import WrongPage from "./wrong.page";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-//hello
 export default function MainPage() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const isLoading = false;
   const [text, setText] = useState([]);
-  const [tasks, setTasks] = useState([]);
-  const [selectedTasks, setSelectedTasks] = useState([]);
-  const [isDeleteActive, setDeleteButtonState] = useState(false);
-
+  const [allTasks, setAllTasks] = useState([]);
+  const [doneTasks, setDoneTasks] = useState([]);
+  const [isSelectActive, setIsSelectActive] = useState(false);
   /**
    * Handles the change in selection state when a checkbox is checked or unchecked.
    *
-   * @param {number} index - The index of the task in the tasks array.
+   * @param {number} index - The index of the task in the allTasks array.
    * @param {boolean} checked - The new state of the checkbox (`true` if checked, `false` if unchecked).
    * @returns {void}
    */
   const handleSelectionChange = (index, checked) => {
+    console.log(checked);
     if (checked) {
-      setSelectedTasks([...selectedTasks, tasks[index]]); //hello
+      setDoneTasks([...doneTasks, allTasks[index]]);
     } else {
-      const updatedItems = removeItem(selectedTasks, index);
-      setSelectedTasks(updatedItems);
+      console.log("i ma herer");
+
+      const selectedNew = doneTasks.filter((task) => task !== allTasks[index]);
+
+      setDoneTasks(selectedNew);
     }
   };
 
   const deleteTask = (index) => {
-    const updatedItems = removeItem(tasks, index);
-    setTasks(updatedItems);
-    if (tasks.length === 1) {
-      setDeleteButtonState(false); // set false when there's no task will be left
+    const selectedNew = doneTasks.filter((task) => task !== allTasks[index]);
+    setDoneTasks(selectedNew);
+    const doneNew = removeItem(allTasks, index);
+    setAllTasks(doneNew);
+    if (allTasks.length === 1) {
+      setIsSelectActive(false); // set false when there's no task will be left
     }
   };
 
   const addTask = () => {
-    const updatedTasks = [...tasks, text];
-    setTasks(updatedTasks);
+    const updatedTasks = [...allTasks, text];
+    setAllTasks(updatedTasks);
     setText([]);
   };
 
   const taskEdit = (index, newText) => {
-    const updatedTasks = [...tasks];
+    const updatedTasks = [...allTasks];
     updatedTasks[index] = newText;
-    setTasks(updatedTasks);
+    setAllTasks(updatedTasks);
   };
 
   const handleSignOut = async () => {
@@ -60,6 +63,7 @@ export default function MainPage() {
     SignOut();
     navigate("/login");
   };
+
   if (state && state.currentUser) {
     if (!isLoading) {
       return (
@@ -72,36 +76,46 @@ export default function MainPage() {
               gap: "1vh",
             }}
           >
-            <div className="list-header">Your daily tasks</div>
-            {/* delete button */}
-            <Button disabled={tasks.length === 0} danger onClick={() => setDeleteButtonState(!isDeleteActive)}>
-              {isDeleteActive ? "Done" : <DeleteOutlined />}
+            <div className="list-header">Your daily allTasks</div>
+            {/* ToD0o */}
+
+            <Button disabled={allTasks.length === 0} onClick={() => setIsSelectActive(!isSelectActive)}>
+              {isSelectActive ? "Done" : "Select"}
             </Button>
           </div>
 
-          {/* List with the items from `tasks` */}
+          {/* List with the items from `allTasks` */}
           <List
             className="task-list"
             bordered
-            dataSource={tasks}
+            dataSource={allTasks}
             renderItem={(item, index) => (
               <List.Item style={listItem}>
                 {/* if there's no active delete display checkbox */}
-                {isDeleteActive ? null : (
+                {isSelectActive ? (
                   <Checkbox
+                    value={doneTasks.includes(allTasks[index])}
                     onChange={(e) => {
                       const isChecked = e.target.checked;
+
                       handleSelectionChange(index, isChecked);
                     }}
                     style={{ marginRight: 0, width: 21, height: 32 }}
                   />
-                )}
+                ) : null}
 
                 {/* leave input in the middle  */}
-                <Input value={item} variant="borderless" onChange={(e) => taskEdit(index, e.target.value)} />
+                <Input
+                  value={item}
+                  variant="borderless"
+                  onChange={(e) => taskEdit(index, e.target.value)}
+                  style={{
+                    textDecoration: doneTasks.some((task) => task === allTasks[index]) ? "line-through" : "none",
+                  }}
+                />
 
                 {/* if theres active delete then display delete icon */}
-                {isDeleteActive ? (
+                {isSelectActive ? (
                   <Button style={{ padding: 0 }} type="link" onClick={() => deleteTask(index)}>
                     ⛔
                   </Button>

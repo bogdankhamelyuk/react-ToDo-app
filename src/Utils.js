@@ -6,7 +6,8 @@
  * @returns {string[]} - A new array with the element at the specified index removed.
  */
 export const removeItem = (toBeChangedArr, index) => {
-  return toBeChangedArr.slice(0, index).concat(toBeChangedArr.slice(index + 1));
+  const chArr = toBeChangedArr.slice(0, index).concat(toBeChangedArr.slice(index + 1));
+  return chArr;
 };
 export const inputText = {
   width: "30vh",
