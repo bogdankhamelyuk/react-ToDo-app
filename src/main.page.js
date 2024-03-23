@@ -7,10 +7,12 @@ import Spinner from "./spinner.comp";
 import WrongPage from "./wrong.page";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { updateUserData } from "./Utils";
 
 export default function MainPage() {
   const navigate = useNavigate();
   const { state } = useLocation();
+  const uid = state.currentUser;
   const isLoading = false;
   const [text, setText] = useState([]);
   const [allTasks, setAllTasks] = useState([]);
@@ -27,10 +29,7 @@ export default function MainPage() {
     if (checked) {
       setDoneTasks([...doneTasks, allTasks[index]]);
     } else {
-      console.log("i ma herer");
-
       const selectedNew = doneTasks.filter((task) => task !== allTasks[index]);
-
       setDoneTasks(selectedNew);
     }
   };
@@ -57,17 +56,17 @@ export default function MainPage() {
     setAllTasks(updatedTasks);
   };
 
-  const handleSignOut = async () => {
+  const handleSignOut = () => {
     // setIsLoading(true);
     SignOut();
     navigate("/login");
   };
 
   useEffect(() => {
-    // if (state) updateUserData(state.currentUser, doneTasks, allTasks);
-  });
+    updateUserData(uid, doneTasks, allTasks);
+  }, [allTasks, doneTasks]);
 
-  if (state) {
+  if (uid) {
     // ask for state as well, otherwise: TypeError: Cannot read properties of null (reading 'currentUser')
     if (!isLoading) {
       return (
@@ -98,7 +97,7 @@ export default function MainPage() {
                 {/* if there's no active delete display checkbox */}
                 {isSelectActive ? (
                   <Checkbox
-                    value={doneTasks.includes(allTasks[index])}
+                    checked={doneTasks.includes(allTasks[index])}
                     onChange={(e) => {
                       const isChecked = e.target.checked;
 

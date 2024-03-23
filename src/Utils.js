@@ -40,12 +40,13 @@ export const getFirebaseConfig = async () => {
   });
 };
 
-export const updateUserData = async (uid, selectedTasks, allTasks) => {
+export const updateUserData = async (uid, doneTasks, allTasks) => {
   try {
-    const url = "https://pwyj743grf.execute-api.us-east-1.amazonaws.com/dev/api/task"; // Replace with your actual AWS Lambda URL
+    const url = "https://pwyj743grf.execute-api.us-east-1.amazonaws.com/dev/api/update"; // Replace with your actual AWS Lambda URL
+    // const url = "http://localhost:3000/api/update";
     const requestBody = {
       uid: uid,
-      selectedTasks: selectedTasks,
+      doneTasks: doneTasks,
       allTasks: allTasks,
     };
     const response = await fetch(url, {
@@ -60,6 +61,7 @@ export const updateUserData = async (uid, selectedTasks, allTasks) => {
     }
     const responseData = await response.json();
     console.log("Response:", responseData);
+    // return Promise.resolve(responseData);
     return responseData; // If Lambda returns any response
   } catch (error) {
     console.error("Error:", error);
