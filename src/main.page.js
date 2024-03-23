@@ -64,7 +64,7 @@ export default function MainPage() {
 
   useEffect(() => {
     updateUserData(uid, doneTasks, allTasks);
-  }, [allTasks, doneTasks]);
+  }, [allTasks, doneTasks, uid]);
 
   if (uid) {
     // ask for state as well, otherwise: TypeError: Cannot read properties of null (reading 'currentUser')
