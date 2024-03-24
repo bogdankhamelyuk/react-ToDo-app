@@ -35,29 +35,37 @@ app.get("/api/firebase-config", (req, res) => {
   res.json(firebaseConfig);
 });
 
-app.post("/api/update", async (req, res) => {
+app.post("/api/get-data", async (req, res) => {
+  try {
+    const { uid } = req.body;
+    const existingUser = await UserData.findOne({ uid });
+    if (!existingUser) {
+      // If the document does not exist, create a new one
+      const newUserData = new UserData({
+        uid,
+        doneTasks: [],
+        allTasks: [],
+      });
+      existingUser = await newUserData.save();
+    }
+    // Return doneTasks and allTasks back to the front end
+    res.json({
+      doneTasks: existingUser.doneTasks,
+      allTasks: existingUser.allTasks,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.post("/api/update-data", async (req, res) => {
   try {
     const { uid, doneTasks, allTasks } = req.body;
-
-    // Check if a document with the given UID already exists
     const existingUser = await UserData.findOne({ uid });
-
-    if (existingUser) {
-      // If the document exists, update it
-      existingUser.doneTasks = doneTasks;
-      existingUser.allTasks = allTasks;
-      const updatedTask = await existingUser.save();
-      res.json(updatedTask);
-    } else {
-      // If the document does not exist, create a new one
-      const newTask = new UserData({
-        uid,
-        doneTasks,
-        allTasks,
-      });
-      const savedTask = await newTask.save();
-      res.json(savedTask);
-    }
+    existingUser.doneTasks = doneTasks;
+    existingUser.allTasks = allTasks;
+    const updatedTask = await existingUser.save();
+    res.json(updatedTask);
   } catch (error) {
     // Handle errors
     console.error("Error updating/creating task:", error);

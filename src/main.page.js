@@ -12,11 +12,13 @@ import { updateUserData } from "./Utils";
 export default function MainPage() {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const uid = state.currentUser;
+  // const uid = state.currentUser;
+  const { uid, done, all } = state;
+  // console.log(done, all);
   const isLoading = false;
   const [text, setText] = useState([]);
-  const [allTasks, setAllTasks] = useState([]);
-  const [doneTasks, setDoneTasks] = useState([]);
+  const [allTasks, setAllTasks] = useState(all);
+  const [doneTasks, setDoneTasks] = useState(done);
   const [isSelectActive, setIsSelectActive] = useState(false);
   /**
    * Handles the change in selection state when a checkbox is checked or unchecked.
@@ -79,7 +81,7 @@ export default function MainPage() {
               gap: "1vh",
             }}
           >
-            <div className="list-header">Your daily allTasks</div>
+            <div className="list-header">Your daily Tasks</div>
             {/* ToD0o */}
 
             <Button disabled={allTasks.length === 0} onClick={() => setIsSelectActive(!isSelectActive)}>

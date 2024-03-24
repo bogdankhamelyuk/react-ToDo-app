@@ -7,7 +7,7 @@ import Spinner from "./spinner.comp";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { getFirebaseConfig } from "./Utils";
+import { getFirebaseConfig, getUserData } from "./Utils";
 
 export default function LoginPage() {
   const [loginView, setLoginView] = useState(true);
@@ -25,9 +25,18 @@ export default function LoginPage() {
             // Signed in
             const user = userCredential.user;
             const uid = user.uid;
-            console.log("Login success");
-            navigate("/main", { state: { currentUser: uid } });
-            // ...
+
+            getUserData(uid).then((response) => {
+              const { doneTasks, allTasks } = response;
+              console.log("Login success");
+              navigate("/main", {
+                state: {
+                  uid: user.uid,
+                  done: doneTasks,
+                  all: allTasks,
+                },
+              });
+            });
           })
           .catch((error) => {
             setIsLoading(false);

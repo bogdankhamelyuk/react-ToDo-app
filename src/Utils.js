@@ -40,9 +40,34 @@ export const getFirebaseConfig = async () => {
   });
 };
 
+export const getUserData = async (uid) => {
+  try {
+    const url = "https://pwyj743grf.execute-api.us-east-1.amazonaws.com/dev/api/get-data"; // Replace with your actual AWS Lambda URL
+    const requestBody = {
+      uid: uid,
+    };
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const responseData = await response.json();
+    return Promise.resolve(responseData);
+    // return responseData;
+  } catch (error) {
+    console.error("Error:", error);
+    throw new Error("Failed to update user data");
+  }
+};
+
 export const updateUserData = async (uid, doneTasks, allTasks) => {
   try {
-    const url = "https://pwyj743grf.execute-api.us-east-1.amazonaws.com/dev/api/update"; // Replace with your actual AWS Lambda URL
+    const url = "https://pwyj743grf.execute-api.us-east-1.amazonaws.com/dev/api/update-data"; // Replace with your actual AWS Lambda URL
     // const url = "http://localhost:3000/api/update";
     const requestBody = {
       uid: uid,
@@ -60,8 +85,7 @@ export const updateUserData = async (uid, doneTasks, allTasks) => {
       throw new Error("Network response was not ok");
     }
     const responseData = await response.json();
-    console.log("Response:", responseData);
-    // return Promise.resolve(responseData);
+    // console.log("Response:", responseData);
     return responseData; // If Lambda returns any response
   } catch (error) {
     console.error("Error:", error);

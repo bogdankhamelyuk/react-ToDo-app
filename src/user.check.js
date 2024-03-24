@@ -5,7 +5,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
 import Spinner from "./spinner.comp";
 import { useNavigate } from "react-router-dom";
-import { getFirebaseConfig } from "./Utils";
+import { getFirebaseConfig, getUserData } from "./Utils";
+
 export default function UserCheck() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -17,9 +18,18 @@ export default function UserCheck() {
       const auth = getAuth(app);
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          console.log("navigation to main");
-          navigate("/main", { state: { currentUser: user.uid } });
-          // ...
+          console.log(user);
+          getUserData(user.uid).then((response) => {
+            const { doneTasks, allTasks } = response;
+            console.log("Login success");
+            navigate("/main", {
+              state: {
+                uid: user.uid,
+                done: doneTasks,
+                all: allTasks,
+              },
+            });
+          });
         } else {
           console.log("user isnt registered yet: ", user);
           navigate("/login");
