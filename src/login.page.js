@@ -25,7 +25,6 @@ export default function LoginPage() {
             // Signed in
             const user = userCredential.user;
             const uid = user.uid;
-
             getUserData(uid).then((response) => {
               const { doneTasks, allTasks } = response;
               console.log("Login success");
@@ -51,7 +50,17 @@ export default function LoginPage() {
             const user = userCredential.user;
             const uid = user.uid; // Get the UID of the newly created user
             console.log("registration completed!");
-            navigate("/main", { state: { currentUser: uid } });
+            getUserData(uid).then((response) => {
+              const { doneTasks, allTasks } = response;
+              console.log("Login success");
+              navigate("/main", {
+                state: {
+                  uid: user.uid,
+                  done: doneTasks,
+                  all: allTasks,
+                },
+              });
+            });
           })
           .catch((error) => {
             setIsLoading(false);
