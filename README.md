@@ -1,70 +1,35 @@
-# Getting Started with Create React App
+# About
+This ToDo application features user registration/authentication to facilitate data synchronization across sessions and devices.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Used technologies
+Frontend: 
+  * ReactJs
+  * Ant Design
+  * CSS
 
-## Available Scripts
+Backend: 
+  * Firebase (hosting + user authentication)
+  * AWS (Lambda functions)
+  * Serverless (upload Express.Js server to AWS Lambda)
+  * MongoDB (data storage)
+    
+## Internal logic
 
-In the project directory, you can run:
+1) user follows the basic link with no suffixes: "/"
+    - Initialize the application by retrieving the Firebase Configuration from the Express server through a GET request running on a Lambda function.
+    - Receive the Authentication instance associated with the provided app from the previous step.
+    - Monitor changes in the authentication state. If the user does not exist (i.e., is not registered yet), automatically navigate to the login page ("/login").
+    - If the user exists, check the latest data from MongoDB by sending a POST request to the Express server. Navigate to the main page ("/main") and include the received data (tasks).
+2) user is on login page ("/login")
+    - if user exists
+      - search with user ID in MangaDB for data entries or create new
+    - if user does not exists
+      - register and then receive newly created user ID
+      - create database for new user
+    - navigate to main ("/main")
+3) user is on main page  
+     - Initialize the state string arrays `doneTasks` and `allTasks` by utilizing the `useState` hook with data passed from preceding pages.
+     - When any changes occur within `doneTasks` or `allTasks`, update the corresponding database values by sending `POST` requests to Express. Use the `useEffect` hook for this purpose.
 
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Conclusion 
+In summary, this ToDo application provides a robust solution for managing tasks, with a user-friendly interface and seamless data synchronization capabilities across different sessions and devices. Application is an example of MERN-Stack and typical CRUD-operations. 
