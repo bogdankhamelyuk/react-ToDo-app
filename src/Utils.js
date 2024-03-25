@@ -42,7 +42,8 @@ export const getFirebaseConfig = async () => {
 
 export const getUserData = async (uid) => {
   try {
-    const url = "https://pwyj743grf.execute-api.us-east-1.amazonaws.com/dev/api/get-data"; // Replace with your actual AWS Lambda URL
+    const url = "https://pwyj743grf.execute-api.us-east-1.amazonaws.com/dev/api/get-data";
+    // const url = "http://localhost:3000/api/get-data";
     const requestBody = {
       uid: uid,
     };
@@ -67,8 +68,8 @@ export const getUserData = async (uid) => {
 
 export const updateUserData = async (uid, doneTasks, allTasks) => {
   try {
-    const url = "https://pwyj743grf.execute-api.us-east-1.amazonaws.com/dev/api/update-data"; // Replace with your actual AWS Lambda URL
-    // const url = "http://localhost:3000/api/update";
+    const url = "https://pwyj743grf.execute-api.us-east-1.amazonaws.com/dev/api/update-data";
+    // const url = "http://localhost:3000/api/update-data";
     const requestBody = {
       uid: uid,
       doneTasks: doneTasks,

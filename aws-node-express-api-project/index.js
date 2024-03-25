@@ -21,8 +21,6 @@ mongoose
     console.error("Error connecting to MongoDB:", err);
   });
 
-app.get("/", async (req, res, next) => {});
-
 app.get("/api/firebase-config", (req, res) => {
   const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
@@ -38,10 +36,10 @@ app.get("/api/firebase-config", (req, res) => {
 app.post("/api/get-data", async (req, res) => {
   try {
     const { uid } = req.body;
-    const existingUser = await UserData.findOne({ uid });
+    var existingUser = await UserData.findOne({ uid });
     if (!existingUser) {
       // If the document does not exist, create a new one
-      const newUserData = new UserData({
+      var newUserData = new UserData({
         uid,
         doneTasks: [],
         allTasks: [],
@@ -61,11 +59,25 @@ app.post("/api/get-data", async (req, res) => {
 app.post("/api/update-data", async (req, res) => {
   try {
     const { uid, doneTasks, allTasks } = req.body;
-    const existingUser = await UserData.findOne({ uid });
-    existingUser.doneTasks = doneTasks;
-    existingUser.allTasks = allTasks;
-    const updatedTask = await existingUser.save();
-    res.json(updatedTask);
+    var existingUser = await UserData.findOne({ uid });
+    if (!existingUser) {
+      // If the document does not exist, create a new one
+      var newUserData = new UserData({
+        uid,
+        doneTasks: [],
+        allTasks: [],
+      });
+      existingUser = await newUserData.save();
+      res.json({
+        doneTasks: existingUser.doneTasks,
+        allTasks: existingUser.allTasks,
+      });
+    } else {
+      existingUser.doneTasks = doneTasks;
+      existingUser.allTasks = allTasks;
+      const updatedTask = await existingUser.save();
+      res.json(updatedTask);
+    }
   } catch (error) {
     // Handle errors
     console.error("Error updating/creating task:", error);

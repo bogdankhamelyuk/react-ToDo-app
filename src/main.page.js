@@ -3,7 +3,6 @@ import { List, Input, Button, Checkbox } from "antd";
 import { useEffect, useState } from "react";
 import { removeItem, inputText, listItem, addButton } from "./Utils";
 import { SignOut } from "./user.check";
-import Spinner from "./spinner.comp";
 import WrongPage from "./wrong.page";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +14,6 @@ export default function MainPage() {
   // const uid = state.currentUser;
   const { uid, done, all } = state;
   // console.log(done, all);
-  const isLoading = false;
   const [text, setText] = useState([]);
   const [allTasks, setAllTasks] = useState(all);
   const [doneTasks, setDoneTasks] = useState(done);
@@ -66,91 +64,88 @@ export default function MainPage() {
 
   useEffect(() => {
     updateUserData(uid, doneTasks, allTasks);
+    console.log("use effect OK");
   }, [allTasks, doneTasks, uid]);
 
-  if (uid) {
+  if (state) {
     // ask for state as well, otherwise: TypeError: Cannot read properties of null (reading 'currentUser')
-    if (!isLoading) {
-      return (
-        <div className="page-container">
-          {/* header */}
-          <div
-            className="horiz-container"
-            style={{
-              alignSelf: "stretch",
-              gap: "1vh",
-            }}
-          >
-            <div className="list-header">Your daily Tasks</div>
-            {/* ToD0o */}
+    return (
+      <div className="page-container">
+        {/* header */}
+        <div
+          className="horiz-container"
+          style={{
+            alignSelf: "stretch",
+            gap: "1vh",
+          }}
+        >
+          <div className="list-header">Your daily Tasks</div>
+          {/* ToD0o */}
 
-            <Button disabled={allTasks.length === 0} onClick={() => setIsSelectActive(!isSelectActive)}>
-              {isSelectActive ? "Done" : "Select"}
-            </Button>
-          </div>
-
-          {/* List with the items from `allTasks` */}
-          <List
-            className="task-list"
-            bordered
-            dataSource={allTasks}
-            renderItem={(item, index) => (
-              <List.Item style={listItem}>
-                {/* if there's no active delete display checkbox */}
-                {isSelectActive ? (
-                  <Checkbox
-                    checked={doneTasks.includes(allTasks[index])}
-                    onChange={(e) => {
-                      const isChecked = e.target.checked;
-
-                      handleSelectionChange(index, isChecked);
-                    }}
-                    style={{ marginRight: 0, width: 21, height: 32 }}
-                  />
-                ) : null}
-
-                {/* leave input in the middle  */}
-                <Input
-                  value={item}
-                  variant="borderless"
-                  onChange={(e) => taskEdit(index, e.target.value)}
-                  style={{
-                    textDecoration: doneTasks.some((task) => task === allTasks[index]) ? "line-through" : "none",
-                  }}
-                />
-
-                {/* if theres active delete then display delete icon */}
-                {isSelectActive ? (
-                  <Button style={{ padding: 0 }} type="link" onClick={() => deleteTask(index)}>
-                    ⛔
-                  </Button>
-                ) : null}
-              </List.Item>
-            )}
-          />
-          <div className="vert-container">
-            <div className="horiz-container">
-              {/*  INPUT and ADD Button */}
-              <Input
-                style={inputText}
-                value={text}
-                placeholder="Type your task"
-                allowClear
-                onChange={(e) => setText(e.target.value)}
-              />
-              <Button type="primary" disabled={text.length === 0} onClick={addTask} style={addButton}>
-                Add
-              </Button>
-            </div>
-            <Button danger onClick={() => handleSignOut()}>
-              Sign Out
-            </Button>
-          </div>
+          <Button disabled={allTasks.length === 0} onClick={() => setIsSelectActive(!isSelectActive)}>
+            {isSelectActive ? "Done" : "Select"}
+          </Button>
         </div>
-      );
-    } else {
-      return <Spinner />;
-    }
+
+        {/* List with the items from `allTasks` */}
+        <List
+          className="task-list"
+          bordered
+          dataSource={allTasks}
+          renderItem={(item, index) => (
+            <List.Item style={listItem}>
+              {/* if there's no active delete display checkbox */}
+              {isSelectActive ? (
+                <Checkbox
+                  checked={doneTasks.includes(allTasks[index])}
+                  onChange={(e) => {
+                    const isChecked = e.target.checked;
+
+                    handleSelectionChange(index, isChecked);
+                  }}
+                  style={{ marginRight: 0, width: 21, height: 32 }}
+                />
+              ) : null}
+
+              {/* leave input in the middle  */}
+              <Input
+                value={item}
+                variant="borderless"
+                onChange={(e) => taskEdit(index, e.target.value)}
+                style={{
+                  textDecoration: doneTasks.some((task) => task === allTasks[index]) ? "line-through" : "none",
+                }}
+              />
+
+              {/* if theres active delete then display delete icon */}
+              {isSelectActive ? (
+                <Button style={{ padding: 0 }} type="link" onClick={() => deleteTask(index)}>
+                  ⛔
+                </Button>
+              ) : null}
+            </List.Item>
+          )}
+        />
+        <div className="vert-container">
+          <div className="horiz-container">
+            {/*  INPUT and ADD Button */}
+            <Input
+              style={inputText}
+              value={text}
+              placeholder="Type your task"
+              allowClear
+              onChange={(e) => setText(e.target.value)}
+            />
+            <Button type="primary" disabled={text.length === 0} onClick={addTask} style={addButton}>
+              Add
+            </Button>
+          </div>
+          <Button danger onClick={() => handleSignOut()}>
+            Sign Out
+          </Button>
+        </div>
+      </div>
+    );
   } else {
     return <WrongPage />;
   }
