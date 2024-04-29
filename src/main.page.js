@@ -129,13 +129,7 @@ export default function MainPage() {
         <div className="vert-container">
           <div className="horiz-container">
             {/*  INPUT and ADD Button */}
-            <Input
-              style={inputText}
-              value={text}
-              placeholder="Type your task"
-              allowClear
-              onChange={(e) => setText(e.target.value)}
-            />
+            <Input style={inputText} value={text} placeholder="Type your task" allowClear onChange={(e) => setText(e.target.value)} />
             <Button type="primary" disabled={text.length === 0} onClick={addTask} style={addButton}>
               Add
             </Button>
